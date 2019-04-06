@@ -3,6 +3,7 @@ package edu.uw.filedemo;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +13,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,7 +53,19 @@ public class MainActivity extends AppCompatActivity {
 
     //actually write to the file
     private void saveToExternalFile(){
+        try {
+            //saving in public Documents directory
+            File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+            if (!dir.exists()) { dir.mkdirs(); } //make dir if doesn't otherwise exist
+            File file = new File(dir, FILE_NAME);
+            Log.v(TAG, "Saving to  " + file.getAbsolutePath());
 
+            PrintWriter out = new PrintWriter(new FileWriter(file, true));
+            out.println(textEntry.getText().toString());
+            out.close();
+        } catch (IOException ioe) {
+            Log.d(TAG, Log.getStackTraceString(ioe));
+        }
     }
 
 

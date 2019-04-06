@@ -49,5 +49,10 @@ public class PhotoActivity extends AppCompatActivity {
     public void sharePicture(View v){
         Log.v(TAG, "Sharing picture...");
 
+//        Intent chooser = Intent.createChooser(shareIntent, "Share Picture");
+//        //check that there is at least one option
+//        if (shareIntent.resolveActivity(getPackageManager()) != null) {
+//            startActivity(chooser);
+//        }
     }
 }
