@@ -1,5 +1,6 @@
 package edu.uw.filedemo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,7 +15,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,10 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Main";
 
-    private static final String FILE_NAME = "myFile.txt";
+    private static final String FILE_NAME = "myFileForLecturing190406.txt";
     
     private EditText textEntry; //save reference for quick access
     private RadioButton externalButton; //save reference for quick access
+    private TextView textDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +40,17 @@ public class MainActivity extends AppCompatActivity {
 
         externalButton = (RadioButton)findViewById(R.id.radio_external);
         textEntry = (EditText)findViewById(R.id.textEntry); //what we're going to save
+        textDisplay = findViewById(R.id.txtDisplay);
     }
 
     public void saveFile(View v){
         Log.v(TAG, "Saving file...");
 
         if(externalButton.isChecked()){ //external storage
-
             saveToExternalFile(); //helper method
-
         }
         else { //internal storage
-
-
+            saveToInternalFile();
         }
     }
 
@@ -68,6 +71,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void saveToInternalFile() {
+        FileOutputStream outputStream;
+        String fileContents = textEntry.getText().toString();
+
+        if (fileContents != null && fileContents != "") {
+            try {
+                outputStream = openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
+                outputStream.write(fileContents.getBytes());
+                outputStream.close();
+            } catch (Exception e) {
+                Log.d(TAG, Log.getStackTraceString(e));
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
     public void loadFile(View v){
@@ -76,10 +95,51 @@ public class MainActivity extends AppCompatActivity {
         textDisplay.setText(""); //clear initially
 
         if(externalButton.isChecked()){ //external storage
+            readFileFromExternal();
 
         }
         else { //internal storage
+            readFileFromInternal();
+        }
+    }
 
+    private void readFileFromExternal() {
+        try {
+            File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+            File file = new File(FILE_NAME);
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            StringBuffer text = new StringBuffer();
+            String line = reader.readLine();
+            while (line != null) {
+                text.append(line + "\n");
+                line = reader.readLine();
+            }
+
+            textDisplay.setText(text);
+            reader.close();
+        } catch (Exception e) {
+            Log.d(TAG, Log.getStackTraceString(e));
+            e.printStackTrace();
+        }
+    }
+
+    private void readFileFromInternal() {
+        try {
+            String filePath = this.getFilesDir() + "/" + FILE_NAME ;
+            File file = new File(filePath);
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            StringBuffer text = new StringBuffer();
+            String line = reader.readLine();
+            while (line != null) {
+                text.append(line + "\n");
+                line = reader.readLine();
+            }
+
+            textDisplay.setText(text);
+            reader.close();
+        } catch (Exception e) {
+            Log.d(TAG, Log.getStackTraceString(e));
+            e.printStackTrace();
         }
     }
 
