@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/lecture10-files-permissions.iml" filepath="$PROJECT_DIR$/lecture10-files-permissions.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/lecture10-files-permissions.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/lecture10-files-permissions.app.iml" />
     </modules>
   </component>
 </project>
